@@ -40,11 +40,11 @@ class NQAnswer {
             else if (this._question.next) {
                 const qNext = this._question.next;
                 if (typeof qNext == 'object') {
-                    if (!this._branches)
+                    if (!this._parent.branches)
                         return;
-                    for (const [id, branch] of this._branches.entries())
-                        if (qNext.has(id))
-                            next = qNext[id];
+                    for (const [id, nextId] of qNext.entries())
+                        if (this._parent.hasBranch(id))
+                            next = nextId;
                 }
                 else if (typeof qNext == 'string')
                     next = qNext;

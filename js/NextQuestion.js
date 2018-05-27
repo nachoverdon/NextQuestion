@@ -35,6 +35,9 @@ class NextQuestion {
     isOutOfBounds(index) {
         return index >= this._questions.length || index < 0;
     }
+    hasBranches() {
+        return this._branches.length > 0;
+    }
     hasBranch(id) {
         return this._branches.indexOf(id) !== -1;
     }

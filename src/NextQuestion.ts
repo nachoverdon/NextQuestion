@@ -55,6 +55,10 @@ class NextQuestion {
 		return index >= this._questions.length || index < 0;
 	}
 
+	hasBranches(): boolean {
+		return this._branches.length > 0;
+	}
+
 	hasBranch(id: string): boolean {
 		return this._branches.indexOf(id) !== -1;
 	}

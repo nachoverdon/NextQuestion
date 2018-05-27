@@ -61,10 +61,10 @@ class NQAnswer {
 				const qNext = this._question.next;
 
 				if (typeof qNext == 'object') {
-					if (!this._branches) return;
+					if (!this._parent.branches) return;
 
-					for (const [id, branch] of this._branches.entries())
-						if (qNext.has(id)) next = qNext[id];
+					for (const [id, nextId] of qNext.entries())
+						if (this._parent.hasBranch(id)) next = nextId;
 
 				}
 
