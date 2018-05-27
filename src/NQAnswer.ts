@@ -9,11 +9,12 @@ class NQAnswer {
 	constructor(question: NQQuestion, data = {}, next?: string, branch?: string,
 		branches?: Map<string, any>) {
 		this._question = question;
-		this._parent = question.parent;
 		this._data = data;
 		this._next = next;
 		this._branch = branch;
 		this._branches = branches;
+
+		this._parent = question.parent;
 	}
 
 	get question(): NQQuestion {
@@ -31,42 +32,66 @@ class NQAnswer {
 	get branches(): Map<string, any> {
 		return this._branches;
 	}
-	
-	get data() {
-		if (this._branches) {			
-			for (const [id, data] of this._branches.entries())
-				if (this._parent.branches.hasOwnProperty(id)) return data;
-        }
-		
+
+	get data(): any {
+		var data;
+
+		this.doIfHasBranch((id, branch) => data = branch.data);
+
+		if (data) return data;
+
 		return this._data;
 	}
-	
+
+	// Uses the first 'next' that finds, following this order:
+	// First it checks the branches, then the answer and then the question
+	// If it founds something, it sets the actual question to the next and
+	// returns its value.
+	// If none is found, returns undefined.
 	get next(): string {
-		// Has branch with next? use that
-		// Elseif default answer? use that
-		// else question.next
-		let next = this._next;
-		
-		if (!next && !this._question.next) return;
-			
-		next = this._question.next;
-		
-		this._question.parent.setActual(
-			this._question.parent.getQuestion(next)
-		);
-		
+		var next: string = null;
+
+		this.doIfHasBranch((id, branch) => next = branch.next);
+
+
+		if (!next) {
+
+			if (this._next) next = this._next;
+
+			else if (this._question.next) {
+				const qNext = this._question.next;
+
+				if (typeof qNext == 'object') {
+
+					for (const [id, branch] of this._branches.entries())
+						if (qNext.has(id)) next = qNext[id];
+
+				}
+
+				else if (typeof qNext == 'string') next = qNext;
+
+			}
+
+		}
+
+		this.setActual(next);
+
 		return next;
 	}
-	
+
 	select(): NQAnswer {
-        this._question.select(this);
-        
+		this._question.select(this);
+
+		if (this._branch) this._parent.addBranch(this._branch);
+
         return this;
 	}
 
 	deselect(): NQAnswer {
-        this._question.deselect(this);
-        
+		this._question.deselect(this);
+
+		if (this._branch) this._parent.removeBranch(this._branch);
+
         return this;
     }
 
@@ -79,4 +104,21 @@ class NQAnswer {
 	    return this._question.isAnswerSelected(this);
     }
 
+
+	doIfHasBranch(func: Function): void {
+		if (!this._branches) return;
+
+
+		for (const [id, branch] of this._branches.entries()) {
+			if (this._parent.hasBranch(id)) {
+				func(id, branch);
+				return;
+			}
+		}
+
+	}
+
+	setActual(questionId: string) {
+		this._parent.setActual(this._parent.getQuestion(questionId));
+	}
 }

@@ -5,6 +5,7 @@ class NextQuestion {
 
 	constructor(questions: NQQuestion[] = []) {
 		this._questions = questions;
+
 		this._actual = null;
 		this._branches = [];
 	}
@@ -52,6 +53,23 @@ class NextQuestion {
 
 	isOutOfBounds(index: number): boolean {
 		return index >= this._questions.length || index < 0;
+	}
+
+	hasBranch(id: string): boolean {
+		return this._branches.indexOf(id) !== -1;
+	}
+
+	addBranch(id: string): NextQuestion {
+		if (!this.hasBranch(id)) this._branches.push(id);
+
+		return this;
+	}
+
+	removeBranch(id: string): NextQuestion {
+		if (this.hasBranch(id))
+			this._branches.splice(this._branches.indexOf(id), 1);
+
+		return this;
 	}
 
 	getIndexOf(question: NQQuestion): number {

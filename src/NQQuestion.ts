@@ -3,18 +3,19 @@ class NQQuestion {
     private _parent: NextQuestion;
     private _answers: NQAnswer[];
     private _data: any;
-    private _next: string;
+    private _next: string | Map<string, string>;
     private _multiselect: boolean;
 	private _selected: NQAnswer[];
 
-	constructor(id: string, parent: NextQuestion, answers: NQAnswer[] = [], 
-		data = {}, next: string = null, multiselect: boolean = false) {
+	constructor(id: string, parent: NextQuestion, answers: NQAnswer[] = [],
+		data = {}, next: string | Map<string, string> = null, multiselect: boolean = false) {
 		this._id = id;
 		this._parent = parent;
 		this._answers = answers;
 		this._data = data;
 		this._next = next;
 		this._multiselect = multiselect;
+
 		this._selected = [];
 	}
 
@@ -34,7 +35,7 @@ class NQQuestion {
 		return this._data;
 	}
 
-	get next(): string {
+	get next(): string | Map<string, string> {
 		return this._next;
 	}
 
@@ -54,7 +55,7 @@ class NQQuestion {
 
 	select(answer: NQAnswer): NQQuestion {
         this._selected.push(answer);
-        
+
         return this;
 	}
 
@@ -62,7 +63,7 @@ class NQQuestion {
 		const index = this._selected.indexOf(answer);
 
         if (index !== -1) this._selected.splice(index, 1);
-        
+
         return this;
 	}
 

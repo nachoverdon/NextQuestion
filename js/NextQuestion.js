@@ -35,6 +35,19 @@ class NextQuestion {
     isOutOfBounds(index) {
         return index >= this._questions.length || index < 0;
     }
+    hasBranch(id) {
+        return this._branches.indexOf(id) !== -1;
+    }
+    addBranch(id) {
+        if (!this.hasBranch(id))
+            this._branches.push(id);
+        return this;
+    }
+    removeBranch(id) {
+        if (this.hasBranch(id))
+            this._branches.splice(this._branches.indexOf(id), 1);
+        return this;
+    }
     getIndexOf(question) {
         if (this.isEmpty())
             return -1;
