@@ -32,7 +32,7 @@ class NQAnswer {
     // returns its value.
     // If none is found, returns undefined.
     get next() {
-        var next = null;
+        var next;
         this.doIfHasBranch((id, branch) => next = branch.next);
         if (!next) {
             if (this._next)
@@ -40,6 +40,8 @@ class NQAnswer {
             else if (this._question.next) {
                 const qNext = this._question.next;
                 if (typeof qNext == 'object') {
+                    if (!this._branches)
+                        return;
                     for (const [id, branch] of this._branches.entries())
                         if (qNext.has(id))
                             next = qNext[id];
