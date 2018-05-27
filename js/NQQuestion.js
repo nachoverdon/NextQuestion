@@ -1,66 +1,62 @@
-export default class NQQuestion {
-    constructor(id, parent, answers = [], data = {}, next = null, multiselect = false, branch = null) {
-        this.id = id;
-        this.parent = parent;
-        this.answers = answers;
-        this.data = data;
-        this.next = next;
-        this.multiselect = multiselect;
-        this.branch = branch;
-        this.selected = [];
+class NQQuestion {
+    constructor(id, parent, answers = [], data = {}, next = null, multiselect = false) {
+        this._id = id;
+        this._parent = parent;
+        this._answers = answers;
+        this._data = data;
+        this._next = next;
+        this._multiselect = multiselect;
+        this._selected = [];
     }
-    getId() {
-        return this.id;
+    get id() {
+        return this._id;
     }
-    getParent() {
-        return this.parent;
+    get parent() {
+        return this._parent;
     }
-    getAnswers() {
-        return this.answers;
+    get answers() {
+        return this._answers;
     }
-    getData() {
-        return this.data;
+    get data() {
+        return this._data;
     }
-    getNext() {
-        return this.next;
+    get next() {
+        return this._next;
     }
-    getMultiselect() {
-        return this.multiselect;
+    get multiselect() {
+        return this._multiselect;
     }
-    getSelected() {
-        return this.selected;
-    }
-    getBranch() {
-        return this.branch;
+    get selected() {
+        return this._selected;
     }
     addAnswer(answer) {
-        this.answers.push(answer);
+        this._answers.push(answer);
         return this;
     }
     select(answer) {
-        this.selected.push(answer);
+        this._selected.push(answer);
         return this;
     }
     deselect(answer) {
-        let index = this.selected.indexOf(answer);
+        const index = this._selected.indexOf(answer);
         if (index !== -1)
-            this.selected.splice(index, 1);
+            this._selected.splice(index, 1);
         return this;
     }
     getAnswer(index) {
-        return this.answers[index];
+        return this._answers[index];
     }
     getIndexOf(answer) {
-        return this.answers.indexOf(answer);
+        return this._answers.indexOf(answer);
     }
     hasSelected() {
-        return this.selected.length > 0;
+        return this._selected.length > 0;
     }
     isAnswerSelected(answer) {
-        return answer === this.selected.find(selected => selected === answer);
+        return answer === this._selected.find(selected => selected === answer);
     }
     emptySelected() {
-        this.selected = [];
+        this._selected = [];
         return this;
     }
 }

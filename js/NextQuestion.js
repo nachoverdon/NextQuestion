@@ -1,40 +1,39 @@
-import NQQuestion from './NQQuestion';
-import NQAnswer from './NQAnswer';
-export default class NextQuestion {
+class NextQuestion {
     constructor(questions = []) {
-        this.actual = null;
-        this.questions = questions;
-        this.actual = null;
-        this.branches = [];
+        this._actual = null;
+        this._questions = questions;
+        this._actual = null;
+        this._branches = [];
     }
-    getQuestions() {
-        return this.questions;
+    get questions() {
+        return this._questions;
     }
-    getActual() {
-        return this.actual;
+    get actual() {
+        return this._actual;
     }
-    getBranches() {
-        return this.branches;
+    get branches() {
+        return this._branches;
     }
-    fromArray(array) {
-        for (let nqquestion of array) {
-            let next = nqquestion.getNext();
-            let question = new NQQuestion(nqquestion.getId(), this, [], nqquestion.getData(), next, nqquestion.getMultiselect());
-            for (let answer of nqquestion.getAnswers()) {
-                question.addAnswer(new NQAnswer(question, answer.getData(), answer.getNext()));
+    fromArray(questions) {
+        for (const q of questions) {
+            const nqQuestion = new NQQuestion(q.id, this, [], q.data, q.next, q.multiselect);
+            for (const a of q.answers) {
+                nqQuestion.addAnswer(new NQAnswer(nqQuestion, a.data, a.next, a.branches));
             }
-            this.questions.push(question);
+            this._questions.push(nqQuestion);
         }
         return this;
     }
+    // fromJson(json: Map<string, any[]>[]): NextQuestion {
+    // }
     hasQuestions() {
-        return this.questions.length > 0;
+        return this._questions.length > 0;
     }
     isEmpty() {
         return !this.hasQuestions();
     }
     isOutOfBounds(index) {
-        return index >= this.questions.length || index < 0;
+        return index >= this._questions.length || index < 0;
     }
     getIndexOf(question) {
         if (this.isEmpty())
@@ -46,35 +45,29 @@ export default class NextQuestion {
         return this.questions[index];
     }
     getQuestion(id) {
-        for (let question of this.questions)
-            if (question.getId() === id)
+        for (const question of this._questions)
+            if (question.id === id)
                 return question;
     }
     getPrevious() {
-        return this.getQuestionAt(this.getIndexOf(this.actual) - 1);
+        return this.getQuestionAt(this.getIndexOf(this._actual) - 1);
     }
     getNext() {
-        return this.getQuestionAt(this.getIndexOf(this.actual) + 1);
+        return this.getQuestionAt(this.getIndexOf(this._actual) + 1);
     }
     getFirst() {
         if (this.isEmpty())
             return;
-        return this.questions[0];
+        return this._questions[0];
     }
     getLast() {
         if (this.isEmpty())
             return;
-        let last = this.questions.length - 1;
-        return last !== -1 ? this.questions[last] : null;
+        const last = this._questions.length - 1;
+        return last !== -1 ? this._questions[last] : null;
     }
     setActual(question) {
-        this.actual = question;
+        this._actual = question;
         return this;
-    }
-    cloneQuestion(id, newId, next) {
-        let question = this.getQuestion(id);
-        if (!question)
-            return;
-        return new NQQuestion(newId, question.getParent(), question.getAnswers(), question.getData(), next, question.getMultiselect());
     }
 }

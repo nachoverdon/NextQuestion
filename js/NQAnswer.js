@@ -1,52 +1,55 @@
-export default class NQAnswer {
-    constructor(question, data = {}, next) {
-        this.question = question;
-        this.parent = question.getParent();
-        this.data = data;
-        this.next = next;
+class NQAnswer {
+    constructor(question, data = {}, next, branch, branches) {
+        this._question = question;
+        this._parent = question.parent;
+        this._data = data;
+        this._next = next;
+        this._branch = branch;
+        this._branches = branches;
     }
-    getQuestion() {
-        return this.question;
+    get question() {
+        return this._question;
     }
-    getParent() {
-        return this.parent;
+    get parent() {
+        return this._parent;
     }
-    getData() {
-        if (this.branches) {
-            let branches = this.parent.getBranches();
-            for (let [id, data] of this.branches.entries())
-                if (branches.hasOwnProperty(id))
+    get branch() {
+        return this._branch;
+    }
+    get branches() {
+        return this._branches;
+    }
+    get data() {
+        if (this._branches) {
+            for (const [id, data] of this._branches.entries())
+                if (this._parent.branches.hasOwnProperty(id))
                     return data;
         }
-        return this.data;
+        return this._data;
     }
-    getNext() {
+    get next() {
         // Has branch with next? use that
         // Elseif default answer? use that
         // else question.next
-        let next = this.next;
-        if (!next) {
-            let qNext = this.question.getNext();
-            if (!qNext)
-                return;
-            next = qNext;
-        }
-        let parent = this.question.getParent();
-        parent.setActual(parent.getQuestion(next));
+        let next = this._next;
+        if (!next && !this._question.next)
+            return;
+        next = this._question.next;
+        this._question.parent.setActual(this._question.parent.getQuestion(next));
         return next;
     }
     select() {
-        this.question.select(this);
+        this._question.select(this);
         return this;
     }
     deselect() {
-        this.question.deselect(this);
+        this._question.deselect(this);
         return this;
     }
     getIndex() {
-        return this.question.getIndexOf(this);
+        return this._question.getIndexOf(this);
     }
     isSelected() {
-        return this.question.isAnswerSelected(this);
+        return this._question.isAnswerSelected(this);
     }
 }

@@ -1,102 +1,91 @@
-import NextQuestion from "./NextQuestion";
-import NQAnswer from "./NQAnswer";
+class NQQuestion {
+    private _id: string;
+    private _parent: NextQuestion;
+    private _answers: NQAnswer[];
+    private _data: any;
+    private _next: string;
+    private _multiselect: boolean;
+	private _selected: NQAnswer[];
 
-
-export default class NQQuestion {
-    private id: string;
-    private parent: NextQuestion;
-    private answers: NQAnswer[];
-    private data: any;
-    private next: string;
-    private multiselect: boolean;
-	private selected: NQAnswer[];
-	private branch: string;
-
-    constructor(id: string, parent: NextQuestion, answers: NQAnswer[] = [], data = {},
-        next: string = null, multiselect: boolean = false, branch: string = null) {
-		this.id = id;
-		this.parent = parent;
-		this.answers = answers;
-		this.data = data;
-		this.next = next;
-		this.multiselect = multiselect;
-		this.branch = branch;
-		this.selected = [];
+	constructor(id: string, parent: NextQuestion, answers: NQAnswer[] = [], 
+		data = {}, next: string = null, multiselect: boolean = false) {
+		this._id = id;
+		this._parent = parent;
+		this._answers = answers;
+		this._data = data;
+		this._next = next;
+		this._multiselect = multiselect;
+		this._selected = [];
 	}
 
-
-	getId(): string {
-		return this.id;
+	get id(): string {
+		return this._id;
 	}
 
-	getParent(): NextQuestion {
-		return this.parent;
+	get parent(): NextQuestion {
+		return this._parent;
 	}
 
-	getAnswers(): NQAnswer[] {
-		return this.answers;
+	get answers(): NQAnswer[] {
+		return this._answers;
 	}
 
-	getData() {
-		return this.data;
+	get data() {
+		return this._data;
 	}
 
-	getNext(): string {
-		return this.next;
+	get next(): string {
+		return this._next;
 	}
 
-	getMultiselect(): boolean {
-		return this.multiselect;
+	get multiselect(): boolean {
+		return this._multiselect;
 	}
 
-	getSelected(): NQAnswer[] {
-		return this.selected;
-	}
-
-	getBranch(): string {
-		return this.branch;
+	get selected(): NQAnswer[] {
+		return this._selected;
 	}
 
 	addAnswer(answer: NQAnswer): NQQuestion {
-		this.answers.push(answer);
+		this._answers.push(answer);
 
 		return this;
 	}
 
 	select(answer: NQAnswer): NQQuestion {
-        this.selected.push(answer);
+        this._selected.push(answer);
         
         return this;
 	}
 
 	deselect(answer: NQAnswer): NQQuestion {
-		let index = this.selected.indexOf(answer);
+		const index = this._selected.indexOf(answer);
 
-        if (index !== -1) this.selected.splice(index, 1);
+        if (index !== -1) this._selected.splice(index, 1);
         
         return this;
 	}
 
 	getAnswer(index: number): NQAnswer {
-	    return this.answers[index];
+	    return this._answers[index];
     }
 
     getIndexOf(answer: NQAnswer): number {
-	    return this.answers.indexOf(answer);
+	    return this._answers.indexOf(answer);
     }
 
 	hasSelected(): boolean {
-	    return this.selected.length > 0;
+	    return this._selected.length > 0;
     }
 
 	isAnswerSelected(answer: NQAnswer): boolean {
-	    return answer === this.selected.find(
+	    return answer === this._selected.find(
             selected => selected === answer
         );
     }
 
     emptySelected(): NQQuestion {
-        this.selected = [];
+        this._selected = [];
 
         return this;
     }
