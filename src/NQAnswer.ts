@@ -38,11 +38,7 @@ class NQAnswer {
 
 		this.doIfHasBranch((id, branch) => data = branch.data);
 
-		console.log(data);
-
 		if (data) return data;
-
-		console.log(this._data);
 
 		return this._data;
 	}
@@ -84,9 +80,6 @@ class NQAnswer {
 		this._question.select(this);
 
 		if (this._branch) this._parent.addBranch(this._branch);
-
-		console.log('branch', this._branch)
-		console.log('parent.branches', this._parent.branches);
 
         return this;
 	}
