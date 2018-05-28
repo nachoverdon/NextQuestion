@@ -47,6 +47,17 @@ class NQQuestion {
 		return this._selected;
 	}
 
+	getNext(branch: string): string {
+		if (!this._next) return;
+
+		if (typeof this._next == 'object') {
+			if (branch in this._next) return this._next[branch];
+			else return;
+		}
+
+		return this._next;
+	}
+
 	addAnswer(answer: NQAnswer): NQQuestion {
 		this._answers.push(answer);
 
@@ -86,7 +97,10 @@ class NQQuestion {
     }
 
     emptySelected(): NQQuestion {
-        this._selected = [];
+		for (const answer of this._selected)
+			if (answer.branch) this._parent.removeBranch(answer.branch);
+
+		this._selected = [];
 
         return this;
     }

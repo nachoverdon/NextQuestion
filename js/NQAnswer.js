@@ -37,17 +37,15 @@ class NQAnswer {
         if (!next) {
             if (this._next)
                 next = this._next;
-            else if (this._question.next) {
-                const qNext = this._question.next;
-                if (typeof qNext == 'object') {
-                    if (!this._parent.branches)
-                        return;
-                    for (const [id, nextId] of qNext.entries())
-                        if (this._parent.hasBranch(id))
-                            next = nextId;
+            else {
+                if (!this._parent.hasBranches())
+                    return;
+                for (const branchId of this._parent.branches) {
+                    if (this._question.getNext(branchId)) {
+                        next = this._question.getNext(branchId);
+                        break;
+                    }
                 }
-                else if (typeof qNext == 'string')
-                    next = qNext;
             }
         }
         this.setActual(next);
@@ -57,6 +55,8 @@ class NQAnswer {
         this._question.select(this);
         if (this._branch)
             this._parent.addBranch(this._branch);
+        console.log('branch', this._branch);
+        console.log('parent.branches', this._parent.branches);
         return this;
     }
     deselect() {

@@ -18,7 +18,7 @@ class NextQuestion {
         for (const q of questions) {
             const nqQuestion = new NQQuestion(q.id, this, [], q.data, q.next, q.multiselect);
             for (const a of q.answers) {
-                nqQuestion.addAnswer(new NQAnswer(nqQuestion, a.data, a.next, a.branches));
+                nqQuestion.addAnswer(new NQAnswer(nqQuestion, a.data, a.next, a.branch, a.branches));
             }
             this._questions.push(nqQuestion);
         }

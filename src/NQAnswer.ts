@@ -53,25 +53,22 @@ class NQAnswer {
 
 		this.doIfHasBranch((id, branch) => next = branch.next);
 
-		if (!next) {
 
+		if (!next) {
 			if (this._next) next = this._next;
 
-			else if (this._question.next) {
-				const qNext = this._question.next;
+			else {
+				if (!this._parent.hasBranches()) return;
 
-				if (typeof qNext == 'object') {
-					if (!this._parent.branches) return;
+				for (const branchId of this._parent.branches) {
 
-					for (const [id, nextId] of qNext.entries())
-						if (this._parent.hasBranch(id)) next = nextId;
+					if (this._question.getNext(branchId)) {
+						next = this._question.getNext(branchId);
+						break;
+					}
 
 				}
-
-				else if (typeof qNext == 'string') next = qNext;
-
 			}
-
 		}
 
 		this.setActual(next);
@@ -83,6 +80,9 @@ class NQAnswer {
 		this._question.select(this);
 
 		if (this._branch) this._parent.addBranch(this._branch);
+
+		console.log('branch', this._branch)
+		console.log('parent.branches', this._parent.branches);
 
         return this;
 	}

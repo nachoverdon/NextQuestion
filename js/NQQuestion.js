@@ -29,6 +29,17 @@ class NQQuestion {
     get selected() {
         return this._selected;
     }
+    getNext(branch) {
+        if (!this._next)
+            return;
+        if (typeof this._next == 'object') {
+            if (branch in this._next)
+                return this._next[branch];
+            else
+                return;
+        }
+        return this._next;
+    }
     addAnswer(answer) {
         this._answers.push(answer);
         return this;
@@ -56,6 +67,9 @@ class NQQuestion {
         return answer === this._selected.find(selected => selected === answer);
     }
     emptySelected() {
+        for (const answer of this._selected)
+            if (answer.branch)
+                this._parent.removeBranch(answer.branch);
         this._selected = [];
         return this;
     }

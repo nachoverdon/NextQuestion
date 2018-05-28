@@ -29,9 +29,9 @@ class NextQuestion {
 			);
 
 			for (const a of q.answers) {
-				nqQuestion.addAnswer(
-					new NQAnswer(nqQuestion, a.data, a.next, a.branches)
-				);
+				nqQuestion.addAnswer(new NQAnswer(
+					nqQuestion, a.data, a.next, a.branch, a.branches
+				));
 			}
 
 			this._questions.push(nqQuestion);
