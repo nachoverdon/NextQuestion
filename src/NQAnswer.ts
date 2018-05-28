@@ -34,11 +34,15 @@ class NQAnswer {
 	}
 
 	get data(): any {
-		var data;
+		var data: any;
 
 		this.doIfHasBranch((id, branch) => data = branch.data);
 
+		console.log(data);
+
 		if (data) return data;
+
+		console.log(this._data);
 
 		return this._data;
 	}
@@ -108,14 +112,17 @@ class NQAnswer {
 	doIfHasBranch(func: Function): void {
 		if (!this._branches) return;
 
+		for (const id in this._branches) {
 
-		for (const [id, branch] of this._branches.entries()) {
-			if (this._parent.hasBranch(id)) {
-				func(id, branch);
+			if (this._branches.hasOwnProperty(id)
+				&& this._parent.hasBranch(id)) {
+
+				func(id, this._branches[id]);
+
 				return;
+
 			}
 		}
-
 	}
 
 	setActual(questionId: string) {

@@ -22,8 +22,10 @@ class NQAnswer {
     get data() {
         var data;
         this.doIfHasBranch((id, branch) => data = branch.data);
+        console.log(data);
         if (data)
             return data;
+        console.log(this._data);
         return this._data;
     }
     // Uses the first 'next' that finds, following this order:
@@ -74,9 +76,10 @@ class NQAnswer {
     doIfHasBranch(func) {
         if (!this._branches)
             return;
-        for (const [id, branch] of this._branches.entries()) {
-            if (this._parent.hasBranch(id)) {
-                func(id, branch);
+        for (const id in this._branches) {
+            if (this._branches.hasOwnProperty(id)
+                && this._parent.hasBranch(id)) {
+                func(id, this._branches[id]);
                 return;
             }
         }
